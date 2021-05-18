@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Knowledge Base Document Types
  * Plugin URI:  https://rf.com
- * Description: Provides document types for a custom WP Knowledge Base. Admin menu and submenu document types can be created currently via Bitbucket
+ * Description: Provides document types for my own private Knowledge Base. 
  * Version:     1.0.0
  * Author:      Rosie Faulkner
  * Author URI:  http://www.rf.com/
@@ -25,6 +25,9 @@ class CustomPostType {
 			add_action('init', [$this, 'knowledge_base_troubleshooting'], 0);
 			add_action('init', [$this, 'knowledge_base_functionalities'], 0);
 			add_action('init', [$this, 'collectionsTaxonomy'], 0);
+			add_action('init', [$this, 'productsTaxonomy'], 0);
+			add_action('init', [$this, 'userTaxonomy'], 0);
+			
 		}
 
 	//Creating a How-To Custom Post Type
@@ -60,7 +63,7 @@ class CustomPostType {
 			'can_export'          => true,
 			'exclude_from_search' => true,
 			'yarpp_support'       => true,
-			'taxonomies' 	      => ['post_tag', 'Article'],
+			'taxonomies' 	      => ['post_tag', 'products', 'kb-categories'],
 			'publicly_queryable'  => true,
 			'capability_type'     => 'post'
 		];
@@ -99,7 +102,7 @@ class CustomPostType {
 			'can_export'          => true,
 			'exclude_from_search' => false,
 			'yarpp_support'       => true,
-			'taxonomies' 	      => ['post_tag', 'Article'],
+			'taxonomies' 	      => ['post_tag', 'products', 'kb-categories'],
 			'publicly_queryable'  => true,
 			'capability_type'     => 'post'
 		];
@@ -140,7 +143,7 @@ class CustomPostType {
 			'can_export'          => true,
 			'exclude_from_search' => false,
 			'yarpp_support'       => true,
-			'taxonomies' 	      => ['post_tag', 'Article'],
+			'taxonomies' 	      => ['post_tag', 'products', 'kb-categories'],
 			'publicly_queryable'  => true,
 			'capability_type'     => 'post'
 		];
@@ -181,7 +184,7 @@ class CustomPostType {
 			'can_export'          => true,
 			'exclude_from_search' => false,
 			'yarpp_support'       => true,
-			'taxonomies' 	      => ['post_tag', 'Article'],
+			'taxonomies' 	      => ['post_tag', 'products', 'kb-categories'],
 			'publicly_queryable'  => true,
 			'capability_type'     => 'post'
 		];
@@ -192,34 +195,106 @@ class CustomPostType {
 	function collectionsTaxonomy() {
 
 	  $labels = array(
-		'name' => _x( 'Collections', 'Knowledge Base Collections' ),
-		'singular_name' => _x( 'Collection', 'Knowledge Base Collection' ),
-		'search_items' =>  __( 'Search Collections' ),
-		'all_items' => __( 'All Collections' ),
-		'parent_item' => __( 'Parent Collection' ),
-		'parent_item_colon' => __( 'Parent Collection:' ),
-		'edit_item' => __( 'Edit Collection' ), 
-		'update_item' => __( 'Update Collection' ),
-		'add_new_item' => __( 'Add New Collection' ),
-		'new_item_name' => __( 'New Collection Name' ),
-		'menu_name' => __( 'Collections' ),
+		'name' => _x( 'Knowledge Base Categories', 'Knowledge Base Categories'),
+		'singular_name' => _x( 'Knowledge Base Category', 'Knowledge Base Category'),
+		'search_items' =>  __( 'Search Knowledge Base Categories' ),
+		'all_items' => __( 'All Knowledge Base Categories' ),
+		'parent_item' => __( 'Parent Knowledge Base Category' ),
+		'parent_item_colon' => __( 'Parent Knowledge Base Category:' ),
+		'edit_item' => __( 'Edit Knowledge Base Category' ), 
+		'update_item' => __( 'Update Knowledge Base Category' ),
+		'add_new_item' => __( 'Add New Knowledge Base Category' ),
+		'new_item_name' => __( 'New Knowledge Base Category Name' ),
+		'menu_name' => __( 'Knowledge Base Categories' ),
 	  );    
 
 	// Now register the taxonomy
-	  register_taxonomy('collections',['functionality, troubleshooting', 'procedure', 'how_to'], 
-		['hierarchical' => true,
-        'hierarchical' => true,
+	  register_taxonomy('kb-categories',['post'], 
+		[
+        'hierarchical' => false,
+		'has_archive' => true,
         'public' => true,
-        'show_ui' => false,
+        'show_ui' => true,
+		'capability_type'    => 'post',
+		'show_in_menu' => false,
         'show_in_nav_menus' => true,
         'show_tagcloud' => true,
 		'labels' => $labels,
+		'publicly_queryable' => true,
 		'show_in_rest' => true,
 		'show_admin_column' => true,
 		'query_var' => true,
-		'rewrite' =>  ['slug' => 'collection' ],
 	    ]);
+	}
+	
+		// Create Product Taxonomy for PetPro Teleplus and PetPro Connect
+	function productsTaxonomy() {
 
+	  $labels = array(
+		'name' => _x('products','Pawru Products'),
+		'singular_name' => _x('Product','Pawru Product'),
+		'search_items' =>  __( 'Search Products' ),
+		'all_items' => __( 'All Products' ),
+		'parent_item' => __( 'Parent Product' ),
+		'parent_item_colon' => __( 'Parent Product:' ),
+		'edit_item' => __( 'Edit Product' ), 
+		'update_item' => __( 'Update Product' ),
+		'add_new_item' => __( 'Add New Product' ),
+		'new_item_name' => __( 'New Product' ),
+		'menu_name' => __( 'Product' ),
+	  );    
+
+	// Now register the taxonomy
+	  register_taxonomy('products',['post'], 
+		[
+        'hierarchical' => false,
+		'has_archive' => true,
+        'public' => true,
+        'show_ui' => true,
+		'capability_type'    => 'post',
+		'show_in_menu' => false,
+        'show_in_nav_menus' => true,
+        'show_tagcloud' => true,
+		'labels' => $labels,
+		'publicly_queryable' => true,
+		'show_in_rest' => true,
+		'show_admin_column' => true,
+		'query_var' => true,
+	    ]);
+	}
+	
+	public function userTaxonomy() {
+		$labels = array(
+		'name' => _x('User Type','Pawru Products'),
+		'singular_name' => _x('User Type','Pawru Product'),
+		'search_items' =>  __( 'Search User Types' ),
+		'all_items' => __( 'All User Types' ),
+		'parent_item' => __( 'Parent User Type' ),
+		'parent_item_colon' => __( 'Parent User Type:' ),
+		'edit_item' => __( 'Edit User Type' ), 
+		'update_item' => __( 'Update User Type' ),
+		'add_new_item' => __( 'Add New User Type' ),
+		'new_item_name' => __( 'New User Type' ),
+		'menu_name' => __( 'User Type' ),
+	  );    
+
+	// Now register the taxonomy
+	  register_taxonomy('user-type',['post'], 
+		[
+        'hierarchical' => false,
+		'has_archive' => true,
+        'public' => true,
+        'show_ui' => true,
+		'capability_type'    => 'post',
+		'show_in_menu' => false,
+        'show_in_nav_menus' => true,
+        'show_tagcloud' => true,
+		'labels' => $labels,
+		'publicly_queryable' => true,
+		'show_in_rest' => true,
+		'show_admin_column' => true,
+		'query_var' => true,
+	    ]);
 	}
 
 }
